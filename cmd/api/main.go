@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/MrSafaran/expense-tracker/internal/handler"
 )
 
 func main() {
-	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/", handler.HomeHandler)
 
 	fmt.Println("Server is running on :8080")
 
@@ -14,8 +16,4 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-}
-
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome to Expense Tracker API")
 }
