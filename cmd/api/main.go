@@ -10,6 +10,7 @@ import (
 func main() {
 	http.HandleFunc("/", handler.HomeHandler)
 	http.HandleFunc("/expenses", handler.ExpensesHandler)
+	http.HandleFunc("/expenses/", handler.ExpenseByIDHandler)
 	// http.HandleFunc("/expenses", handler.GetExpensesHandler)
 	// http.HandleFunc("/expenses", handler.CreateExpenseHandler)
 

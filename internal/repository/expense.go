@@ -24,3 +24,35 @@ func GetExpenses() []model.Expense {
 func SaveExpense(expense model.Expense) {
 	expenses = append(expenses, expense)
 }
+
+func GetExpenseByID(id int) (model.Expense, bool) {
+	for _, expense := range expenses {
+		if expense.ID == id {
+			return expense, true
+		}
+	}
+
+	return model.Expense{}, false
+}
+
+func DeleteExpense(id int) bool {
+	for i, expense := range expenses {
+		if expense.ID == id {
+			expenses = append(expenses[:i], expenses[i+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
+
+func UpdateExpense(updatedExpense model.Expense) bool {
+	for i, expense := range expenses {
+		if expense.ID == updatedExpense.ID {
+			expenses[i] = updatedExpense
+			return true
+		}
+	}
+
+	return false
+}
