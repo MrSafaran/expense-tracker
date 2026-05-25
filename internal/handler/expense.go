@@ -10,21 +10,6 @@ import (
 	"github.com/MrSafaran/expense-tracker/internal/service"
 )
 
-var expenses = []model.Expense{
-	{
-		ID:       1,
-		Title:    "Groceries",
-		Amount:   120.50,
-		Category: "Food",
-	},
-	{
-		ID:       2,
-		Title:    "Internet",
-		Amount:   45.00,
-		Category: "Bills",
-	},
-}
-
 func ExpensesHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
@@ -91,9 +76,9 @@ func CreateExpenseHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetExpenseByIDHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-
+	
 	idStr := strings.TrimPrefix(path, "/expenses/")
-
+	
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "invalid expense id", http.StatusBadRequest)

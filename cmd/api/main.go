@@ -4,15 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/MrSafaran/expense-tracker/internal/handler"
+	"github.com/MrSafaran/expense-tracker/internal/router"
 )
 
 func main() {
-	http.HandleFunc("/", handler.HomeHandler)
-	http.HandleFunc("/expenses", handler.ExpensesHandler)
-	http.HandleFunc("/expenses/", handler.ExpenseByIDHandler)
-	// http.HandleFunc("/expenses", handler.GetExpensesHandler)
-	// http.HandleFunc("/expenses", handler.CreateExpenseHandler)
+	router.RegisterRoutes()
 
 	fmt.Println("Server is running on :8080")
 
