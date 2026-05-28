@@ -1,58 +1,55 @@
 package repository
 
-import "github.com/MrSafaran/expense-tracker/internal/model"
+import (
+	"context"
 
-var expenses = []model.Expense{
-	{
-		ID:       1,
-		Title:    "Groceries",
-		Amount:   120.50,
-		Category: "Food",
-	},
-	{
-		ID:       2,
-		Title:    "Internet",
-		Amount:   45.00,
-		Category: "Bills",
-	},
+	"github.com/MrSafaran/expense-tracker/internal/model"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+type ExpenseRepository struct {
+	db *pgxpool.Pool
 }
 
-func GetExpenses() []model.Expense {
-	return expenses
+func NewExpenseRepository(db *pgxpool.Pool) *ExpenseRepository {
+	return &ExpenseRepository{
+		db: db,
+	}
 }
 
-func SaveExpense(expense model.Expense) {
-	expenses = append(expenses, expense)
-}
+func (r *ExpenseRepository) GetExpenses() ([]model.Expense, error) {
 
-func GetExpenseByID(id int) (model.Expense, bool) {
-	for _, expense := range expenses {
-		if expense.ID == id {
-			return expense, true
-		}
+	rows, err := r.db.Query(
+		context.Background(),
+		"SELECT id, title, amount, category FROM expenses",
+	)
+
+	if err != nil {
+		return nil, err
 	}
 
-	return model.Expense{}, false
-}
+	defer rows.Close()
 
-func DeleteExpense(id int) bool {
-	for i, expense := range expenses {
-		if expense.ID == id {
-			expenses = append(expenses[:i], expenses[i+1:]...)
-			return true
+	expenses := []model.Expense{}
+
+	for rows.Next() {
+
+		var expense model.Expense
+
+		err := rows.Scan(
+			&expense.ID,
+			&expense.Title,
+			&expense.Amount,
+			&expense.Category,
+		)
+
+		if err != nil {
+			return nil, err
 		}
+
+		expenses = append(expenses, expense)
 	}
 
-	return false
+	return expenses, nil
 }
 
-func UpdateExpense(updatedExpense model.Expense) bool {
-	for i, expense := range expenses {
-		if expense.ID == updatedExpense.ID {
-			expenses[i] = updatedExpense
-			return true
-		}
-	}
-
-	return false
-}

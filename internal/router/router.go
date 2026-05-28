@@ -7,7 +7,8 @@ import (
 	"github.com/MrSafaran/expense-tracker/internal/middleware"
 )
 
-func RegisterRoutes() {
+func RegisterRoutes(expenseHandler *handler.ExpenseHandler) {
+
 	http.HandleFunc(
 		"/",
 		middleware.RecoveryMiddleware(
@@ -21,16 +22,7 @@ func RegisterRoutes() {
 		"/expenses",
 		middleware.RecoveryMiddleware(
 			middleware.LoggingMiddleware(
-				handler.ExpensesHandler,
-			),
-		),
-	)
-
-	http.HandleFunc(
-		"/expenses/",
-		middleware.RecoveryMiddleware(
-			middleware.LoggingMiddleware(
-				handler.ExpenseByIDHandler,
+				expenseHandler.GetExpensesHandler,
 			),
 		),
 	)

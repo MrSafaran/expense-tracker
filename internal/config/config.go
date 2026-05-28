@@ -7,12 +7,13 @@ import (
 )
 
 type Config struct {
-	Port string
+	Port        string
+	DatabaseURL string
 }
 
 func Load() Config {
 	godotenv.Load()
-	
+
 	port := os.Getenv("PORT")
 
 	if port == "" {
@@ -20,6 +21,7 @@ func Load() Config {
 	}
 
 	return Config{
-		Port: port,
+		Port:        port,
+		DatabaseURL: os.Getenv("DATABASE_URL"),
 	}
 }
