@@ -53,3 +53,29 @@ func (r *ExpenseRepository) GetExpenses() ([]model.Expense, error) {
 	return expenses, nil
 }
 
+func (r *ExpenseRepository) CreateExpense(expense model.Expense) (model.Expense, error) {
+
+	query := `
+		INSERT INTO expenses (
+			title,
+			amount,
+			category
+		)
+		VALUES ($1, $2, $3)
+		RETURNING id
+	`
+
+	err := r.db.QueryRow(
+		context.Background(),
+		query,
+		expense.Title,
+		expense.Amount,
+		expense.Category,
+	).Scan(&expense.ID)
+
+	if err != nil {
+		return model.Expense{}, err
+	}
+
+	return expense, nil
+}

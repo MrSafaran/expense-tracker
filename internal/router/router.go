@@ -22,7 +22,7 @@ func RegisterRoutes(expenseHandler *handler.ExpenseHandler) {
 		"/expenses",
 		middleware.RecoveryMiddleware(
 			middleware.LoggingMiddleware(
-				expenseHandler.GetExpensesHandler,
+				expenseHandler.ExpensesHandler,
 			),
 		),
 	)
