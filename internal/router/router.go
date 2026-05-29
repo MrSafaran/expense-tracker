@@ -26,4 +26,13 @@ func RegisterRoutes(expenseHandler *handler.ExpenseHandler) {
 			),
 		),
 	)
+
+	http.HandleFunc(
+	"/expenses/",
+	middleware.RecoveryMiddleware(
+		middleware.LoggingMiddleware(
+			expenseHandler.ExpenseByIDHandler,
+		),
+	),
+)
 }

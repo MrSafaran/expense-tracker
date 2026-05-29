@@ -1,7 +1,8 @@
 package service
 
 import (
-	 "errors"
+	"errors"
+
 	"github.com/MrSafaran/expense-tracker/internal/model"
 	"github.com/MrSafaran/expense-tracker/internal/repository"
 )
@@ -38,4 +39,14 @@ func (s *ExpenseService) CreateExpense(req model.CreateExpenseRequest) (model.Ex
 	}
 
 	return s.repo.CreateExpense(expense)
+}
+
+func (s *ExpenseService) GetExpenseByID(id int) (model.Expense, error) {
+
+	return s.repo.GetExpenseByID(id)
+}
+
+func (s *ExpenseService) DeleteExpense(id int) error {
+
+	return s.repo.DeleteExpense(id)
 }
