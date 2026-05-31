@@ -129,3 +129,34 @@ func (r *ExpenseRepository) DeleteExpense(id int) error {
 
 	return nil
 }
+
+func (r *ExpenseRepository) UpdateExpense(expense model.Expense) (model.Expense, error) {
+	query := `
+		UPDATE expenses
+		SET
+			title = $1,
+			amount = $2,
+			category = $3
+		WHERE id = $4
+	`
+
+	result, err := r.db.Exec(
+		context.Background(),
+		query,
+		expense.Title,
+		expense.Amount,
+		expense.Category,
+		expense.ID,
+	)
+
+	if err != nil {
+		return model.Expense{}, err
+	}
+
+	if result.RowsAffected() == 0 {
+		return model.Expense{},
+			errors.New("expense not found")
+	}
+
+	return expense, nil
+}

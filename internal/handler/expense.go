@@ -109,6 +109,9 @@ func (h *ExpenseHandler) ExpenseByIDHandler(w http.ResponseWriter, r *http.Reque
 	case http.MethodDelete:
 		h.DeleteExpenseHandler(w, r)
 
+	case http.MethodPut:
+		h.UpdateExpenseHandler(w, r)
+
 	default:
 		http.Error(
 			w,
@@ -174,6 +177,57 @@ func (h *ExpenseHandler) GetExpenseByIDHandler(w http.ResponseWriter, r *http.Re
 			w,
 			"expense not found",
 			http.StatusNotFound,
+		)
+		return
+	}
+
+	w.Header().Set(
+		"Content-Type",
+		"application/json",
+	)
+
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(expense)
+}
+
+func (h *ExpenseHandler) UpdateExpenseHandler(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimPrefix(
+		r.URL.Path,
+		"/expenses/",
+	)
+
+	id, err := strconv.Atoi(path)
+
+	if err != nil {
+		http.Error(
+			w,
+			"invalid expense id",
+			http.StatusBadRequest,
+		)
+		return
+	}
+
+	var req model.CreateExpenseRequest
+
+	err = json.NewDecoder(r.Body).Decode(&req)
+
+	if err != nil {
+		http.Error(
+			w,
+			"invalid request body",
+			http.StatusBadRequest,
+		)
+		return
+	}
+
+	expense, err := h.service.UpdateExpense(id, req)
+
+	if err != nil {
+		http.Error(
+			w,
+			err.Error(),
+			http.StatusBadRequest,
 		)
 		return
 	}

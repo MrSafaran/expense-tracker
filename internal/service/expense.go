@@ -50,3 +50,22 @@ func (s *ExpenseService) DeleteExpense(id int) error {
 
 	return s.repo.DeleteExpense(id)
 }
+
+func (s *ExpenseService) UpdateExpense(id int,req model.CreateExpenseRequest) (model.Expense, error) {
+	if req.Title == "" {
+		return model.Expense{}, errors.New("title is required")
+	}
+
+	if req.Amount <= 0 {
+		return model.Expense{}, errors.New("amount must be positive")
+	}
+
+	expense := model.Expense{
+		ID:       id,
+		Title:    req.Title,
+		Amount:   req.Amount,
+		Category: req.Category,
+	}
+
+	return s.repo.UpdateExpense(expense)
+}
