@@ -21,7 +21,7 @@ func NewExpenseRepository(db *pgxpool.Pool) *ExpenseRepository {
 func (r *ExpenseRepository) GetExpenses() ([]model.Expense, error) {
 	rows, err := r.db.Query(
 		context.Background(),
-		"SELECT id, title, amount, category FROM expenses",
+		"SELECT id, title, amount, category, created_at FROM expenses",
 	)
 
 	if err != nil {
@@ -41,6 +41,7 @@ func (r *ExpenseRepository) GetExpenses() ([]model.Expense, error) {
 			&expense.Title,
 			&expense.Amount,
 			&expense.Category,
+			&expense.CreatedAt,
 		)
 
 		if err != nil {
@@ -61,7 +62,7 @@ func (r *ExpenseRepository) CreateExpense(expense model.Expense) (model.Expense,
 			category
 		)
 		VALUES ($1, $2, $3)
-		RETURNING id
+		RETURNING id, created_at
 	`
 
 	err := r.db.QueryRow(
@@ -70,7 +71,7 @@ func (r *ExpenseRepository) CreateExpense(expense model.Expense) (model.Expense,
 		expense.Title,
 		expense.Amount,
 		expense.Category,
-	).Scan(&expense.ID)
+	).Scan(&expense.ID,&expense.CreatedAt)
 
 	if err != nil {
 		return model.Expense{}, err
@@ -87,7 +88,8 @@ func (r *ExpenseRepository) GetExpenseByID(id int) (model.Expense, error) {
 			id,
 			title,
 			amount,
-			category
+			category,
+			created_at
 		FROM expenses
 		WHERE id = $1
 	`
@@ -101,6 +103,7 @@ func (r *ExpenseRepository) GetExpenseByID(id int) (model.Expense, error) {
 		&expense.Title,
 		&expense.Amount,
 		&expense.Category,
+		&expense.CreatedAt,
 	)
 
 	if err != nil {
