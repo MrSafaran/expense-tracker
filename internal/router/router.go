@@ -35,4 +35,13 @@ func RegisterRoutes(expenseHandler *handler.ExpenseHandler) {
 			),
 		),
 	)
+
+	http.HandleFunc(
+		"/health",
+		middleware.RecoveryMiddleware(
+			middleware.LoggingMiddleware(
+				handler.HealthHandler,
+			),
+		),
+	)
 }
