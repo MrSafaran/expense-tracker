@@ -4,14 +4,14 @@ import (
 	"errors"
 
 	"github.com/MrSafaran/expense-tracker/internal/model"
-	"github.com/MrSafaran/expense-tracker/internal/repository"
+
 )
 
 type ExpenseService struct {
-	repo *repository.ExpenseRepository
+	repo ExpenseRepository
 }
 
-func NewExpenseService(repo *repository.ExpenseRepository) *ExpenseService {
+func NewExpenseService(repo ExpenseRepository) *ExpenseService {
 	return &ExpenseService{
 		repo: repo,
 	}
