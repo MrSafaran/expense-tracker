@@ -7,14 +7,13 @@ import (
 	"strings"
 
 	"github.com/MrSafaran/expense-tracker/internal/model"
-	"github.com/MrSafaran/expense-tracker/internal/service"
 )
 
 type ExpenseHandler struct {
-	service *service.ExpenseService
+	service ExpenseService
 }
 
-func NewExpenseHandler(service *service.ExpenseService) *ExpenseHandler {
+func NewExpenseHandler(service ExpenseService) *ExpenseHandler {
 	return &ExpenseHandler{
 		service: service,
 	}
